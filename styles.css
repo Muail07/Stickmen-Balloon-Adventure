@@ -1,0 +1,318 @@
+<style>
+:root {
+  --ui-bg: rgba(255,255,255,0.92);
+  --hud-bg: rgba(255,255,255,0.45);
+  --hud-text: #000;
+}
+
+/* --- General Layout --- */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  background: #000;
+  overflow: hidden;
+}
+
+#gameWrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Canvas (Full Screen & Adaptive) --- */
+canvas {
+  display: block;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: none; /* JS image visible */
+  z-index: 1;
+  object-fit: cover;
+  image-rendering: crisp-edges;
+}
+
+/* --- Menus & HUD --- */
+#menu, #gameOver {
+  color: black;
+  position: absolute;
+  z-index: 300;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #000000d1;
+  border-radius: 16px;
+  padding: 22px 26px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  text-align: center;
+  backdrop-filter: blur(6px);
+}
+
+#gameOver {
+  background: #d4cfd066;
+  border-color: darkgrey;
+  z-index: 200;
+}
+
+#menu h1, h2 {
+  margin: 0 0 -1px;
+  padding: 5px;
+  font-size: 28px;
+  color: #000;
+  font-variant-caps: petite-caps;
+  background: beige;
+}
+
+#menu p {
+  margin: 14px 0;
+  color: #a39696;
+}
+
+button {
+  display: -webkit-box;
+  place-self: center;
+  margin: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: var(--btn-bg, #333);
+  color: #fff;
+  font-size: font-size: clamp(10px, 1.2vw, 15px);
+  transition: 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  background: beige;
+  color: black;
+  font-weight: 500;
+}
+
+.menubtns button {
+  width: 260px;
+}
+
+.Gameover button {
+  width: 130px;
+  display: inline;
+}
+
+.Gameover p {
+  font-size: smaller;
+  margin: 14px 0;
+  color: black;
+}
+
+.Game-over {
+  background: url('images/gameover.png');
+  width: 155px;
+  height: 136px;
+  margin-bottom: 20px;
+  margin-top: -10%;
+  background-size: cover;
+  place-self: anchor-center;
+  overflow: hidden;
+}
+
+
+
+/* --- Level Select Overlay --- */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 92%;
+  place-self: center;
+}
+
+#levelSelect p {
+  text-align: center;
+  bottom: 12%;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  font-variant-caps: all-small-caps;
+  Background:black;
+  Padding:1.2%;
+  
+  font-weight: 500;
+  position: absolute;
+  place-self: center;
+  filter: saturate(0.4);
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 15%);
+  gap: 4% 2%;
+  background: rgba(0, 0, 0, 1);
+  padding: 8%;
+  border-radius: 37px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  justify-content: center;
+  top: 20%;
+  position: absolute;
+  justify-self: anchor-center;
+  mix-blend-mode: exclusion;
+  border-top-style: inset;
+  border-bottom-style: inset;
+  zoom: 74%;
+}
+/* --- Robo Icon (Level Select) --- */
+.robo {
+  position: absolute;
+  top: 10.5%;
+  height: 18%;
+  width: 17%;
+  background: url(images/robo.png) no-repeat;
+  background-size: contain;
+  place-self: center;
+  z-index: 600;
+}
+
+.level-grid button {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 8px;
+  background: #212020;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.level-grid button:hover {
+  background: beige;
+  color: black;
+  border-radius: 30%;
+  transform: rotate(360deg);
+}
+
+#closeLevelBtn {
+  position: absolute;
+  bottom: 5%;
+  padding: 1% 1%;
+  border: none;
+  background: url(images/close.png) no-repeat;
+  cursor: pointer;
+  height: 6.5%;
+  width: 8%;
+  background-size: contain;
+  background-position-x: center;
+}
+
+/* --- HUD --- */
+#hud {
+  position: absolute;
+  top: 2vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: clamp(10px, 2vw, 18px);
+  align-items: center;
+  padding: clamp(6px, 1vh, 12px) clamp(10px, 2vw, 18px);
+  border-radius: 12px;
+  background: var(--hud-bg);
+  color: grey;
+  font-weight: 700;
+  font-size: clamp(12px, 1.6vh, 18px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  z-index: 150;
+  transition: transform 0.2s ease;
+}
+
+.hud-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(60px, 6vw, 90px);
+}
+
+/* --- Left UI --- */
+#leftUi {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  z-index: 150;
+  display: flex;
+  gap: 8px;
+}
+
+.smallBtn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: #222;
+  color: #fff;
+  font-size: 12px;
+}
+
+#menuBtn {
+  padding: 6px 13px;
+  background: rgba(0,0,0,0.6);
+}
+
+.iconBtn {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  filter: brightness(10);
+}
+
+#menuBtn:hover {
+  background: black;
+  filter: drop-shadow(2px 4px 6px black);
+}
+
+/* --- Footer Note --- */
+#footerNote {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 120;
+  background: rgba(255,255,255,0.9);
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* --- Responsive Scaling --- */
+#hud, #menu, #gameOver, #levelSelect, #leftUi {
+  transform-origin: center center;
+  zoom: calc(100vw / 1280); /* base desktop reference */
+}
+
+/* Adjust for tablets and mobiles */
+@media (max-width: 1024px) {
+  #hud, #menu, #gameOver, #levelSelect, #leftUi {
+    zoom: calc(100vw / 960);
+  }
+}
+
+@media (max-width: 768px) {
+  #hud, #menu, #gameOver, #levelSelect, #leftUi {
+    zoom: calc(100vw / 720);
+  }
+}
+
+@media (max-width: 520px) {
+  #menu h1 { font-size: 18px; }
+  button { font-size: 14px; }
+  .smallBtn { font-size: 13px; }
+}
+
+</style>

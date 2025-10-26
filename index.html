@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, orientation=landscape">
+
+  <title>Stickman Seasons Adventure — Full Update</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="gameWrapper">
+    <canvas id="gameCanvas" aria-label="Stickman Seasons Adventure"></canvas>
+
+    <!-- Main Menu -->
+    <div id="menu" class="menubtns" role="dialog" aria-modal="true">
+      <h1> 𝕾𝖙𝖎𝖈𝖐𝖒𝖊𝖓 𝕭𝖆𝖑𝖑𝖔𝖔𝖓 𝕬𝖉𝖛𝖊𝖓𝖙𝖚𝖗𝖊</h1>
+        <p> Collect <strong>8 Keys</strong> for next level</p>
+	<p style="font-size:smaller;"><strong>Touch/Drag</strong>. Press <strong>P</strong> to Pause/Resume</p>
+       
+      <button id="startBtn">Start Game</button>
+      <button id="levelBtn">Levels</button>
+      <button id="soundBtn">Sound: ON</button>
+      <button id="exitBtn2">Exit Game</button>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud" style="display:none;">
+      <span id="hud-season"></span>
+      <span id="hud-lives"></span>
+      
+      
+    </div>
+
+    <!-- Level Selection Overlay -->
+   <div id="levelSelect" class="overlay">
+  <div class="level-header">
+	<div class="robo"></div>
+  <div class="level-grid" id="levelGrid"></div>
+  <p style="color:Grey;">These Levels represent <strong style="color:white;">Seasonal Variations</strong></p>
+  <button id="closeLevelBtn"></button>
+</div></DIV>
+
+
+
+    <!-- Left UI (Pause + Menu) -->
+    <div id="leftUi">
+<button id="menuBtn" class="smallBtn" style="display:none;">
+    <img src="images/menu.svg" alt="Menu" class="iconBtn" />
+  </button> 
+   
+<button id="pauseBtn" class="smallBtn">
+    Pause
+  </button>
+
+</div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOver" class="Gameover" style="display:none;">
+      <div class="Game-over"></div>
+      <div id="finalScore">Score: 0</div>
+      <p>Try Again to Challenge Your Limits.</p>
+      <div style="margin-top:12px;">
+        <button id="restartBtn" class="smallBtn">Try Again</button>
+        <button id="menuBtnOver" class="smallBtn">Menu</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const wrapper = document.getElementById('gameWrapper');
+  let messageDiv = null;
+
+  function showRotateMessage(show) {
+    if (show) {
+      if (!messageDiv) {
+        messageDiv = document.createElement('div');
+        messageDiv.id = 'rotateNotice';
+        Object.assign(messageDiv.style, {
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'black',
+          color: 'white',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          fontSize: '20px',
+          zIndex: 9999
+        });
+        messageDiv.innerHTML = 'Please rotate your device to <b>landscape</b> mode 🌐';
+        document.body.appendChild(messageDiv);
+      }
+    } else if (messageDiv) {
+      messageDiv.remove();
+      messageDiv = null;
+    }
+  }
+
+  function checkOrientation() {
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (!isMobile) return; // skip on desktop/laptop
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    showRotateMessage(isPortrait);
+  }
+
+  // Run once and on orientation changes only
+  window.addEventListener('orientationchange', checkOrientation);
+  window.addEventListener('load', checkOrientation);
+})();
+</script>
+
+  <script src="script.js"></script>
+</body>
+</html>
